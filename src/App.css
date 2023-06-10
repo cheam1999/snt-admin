@@ -1,0 +1,115 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.custorm-invalid-feedback {
+  /* display: none; */
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 80%;
+  color: #dc3545;
+}
+
+.image-container {
+  /*border-radius: 25px;*/
+  width: 250px;
+  height: 250px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  border: 1px solid lightgray;
+  overflow: visible;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.previewImage { 
+  width: 200px;
+  height: 200px;
+}
+
+.previewGallery{
+  display: flex;
+}
+
+.customDatePickerWidth, 
+.customDatePickerWidth > div.react-datepicker-wrapper, 
+.customDatePickerWidth > div > div.react-datepicker__input-container
+.customDatePickerWidth > div > div.react-datepicker__input-container input {
+   width: 100%;
+}
+
+.react-datepicker-popper {
+  z-index: 9999 !important;
+}
+
+/* #react-select-3-listbox {
+  z-index: 9999 !important;
+} */
+
+.css-26l3qy-menu {
+  z-index: 9999 !important;
+}
+
+/* .css-1s2u09g-control {
+  width: 100% !important;
+  min-height: calc(2.25rem + 2px) !important; 
+  color: #495057 !important; 
+  border: 1px solid #ced4da !important; 
+  border-radius: 0.25rem !important; 
+} */
+
+.limit-text-line {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* number of lines to show */
+          line-clamp: 2; 
+  -webkit-box-orient: vertical;
+}
+
+.max-width {
+  width:100%
+}
