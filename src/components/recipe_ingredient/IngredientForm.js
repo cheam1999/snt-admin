@@ -39,13 +39,55 @@ import {
 
 const endpoint = process.env.REACT_APP_API_ENDPOINT;
 
-function RecipeForm({ match }) {
-  const { id } = useParams();
+function IngredientForm({ match }) {
+  const { id, rec_id } = useParams();
   const MySwal = withReactContent(Swal);
 
   const isAddMode = !id;
-  const [recipe, setRecipe] = useState({});
+  const [ingredient, setIngredient] = useState({});
   const [dialogMessage, setDialogMessage] = useState("");
+
+  const getIngredientById = async (id) => {
+    const url = endpoint + "get_ing_by_id/" + parseInt(id);
+
+    console.log(url);
+
+    await axios
+      .get(url, {
+        headers: {
+          Accept: "application/json",
+          "Content-type": "application/json",
+        },
+      })
+      .then((response) => {
+        setIngredient(response.data);
+        setIngredientName(response.data[0].ingredients_name);
+        // setRecipeId(response.data[0].recipe_id);
+        setAmount(response.data[0].amount);
+        setMeasureName(response.data[0].measure_name);
+        setCups(response.data[0].cups);
+        setComments(response.data[0].comments);
+
+        console.log(response.data[0].measure_name);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const fetchRecipe = async () => {
+    const url = endpoint + "get_recipe";
+    const res = await axios
+      .get(url, {
+        headers: {
+          Accept: "application/json",
+          "Content-type": "application/json",
+        },
+      })
+      .then((response) => {
+        setRecipe(response.data);
+        console.log(recipe);
+      })
+      .catch((error) => console.log(error));
+  };
 
   const getRecipeById = async (id) => {
     const url = endpoint + "get_recipe_by_id/" + parseInt(id);
@@ -60,55 +102,53 @@ function RecipeForm({ match }) {
         },
       })
       .then((response) => {
-        setRecipe(response.data);
-        setRecipeName(response.data[0].recipe_name);
-        setRecipeImage(response.data[0].recipe_image);
-        setIngredients(response.data[0].recipe_ingredients);
-        setInstructions(response.data[0].recipe_instructions);
-        setSource(response.data[0].recipe_source);
-        setMeal(response.data[0].recipe_meal);
+        setRecipeSelected([
+          response.data[0].recipe_id,
+        ]);
 
-        console.log(response.data[0]);
+        console.log("recipe selected", recipeSelected);
       })
       .catch((error) => console.log(error));
   };
 
   useEffect(() => {
-    getRecipeById(id);
+    getRecipeById(rec_id);
   }, []);
-  const navigate = useNavigate();
+
+  useEffect(() => {
+    getIngredientById(id);
+    fetchRecipe();
+  }, []);
 
   // set value
-  const [recipeName, setRecipeName] = useState();
-  const [recipeImage, setRecipeImage] = useState();
-  const [ingredients, setIngredients] = useState();
-  const [instructions, setInstructions] = useState();
-  const [source, setSource] = useState();
-  const [meal, setMeal] = useState("");
-  const [mealNumber, setMealNumber] = useState([]);
+  const [ingredientName, setIngredientName] = useState();
+  const [recipeSelected, setRecipeSelected] = useState();
+  const [recipeID, setRecipeId] = useState();
+  const [amount, setAmount] = useState();
+  const [measure_name, setMeasureName] = useState();
+  const [cups, setCups] = useState();
+  const [comments, setComments] = useState("");
+  const [recipe, setRecipe] = useState([]);
   const [openConfirmBox, setOpenConfirmBox] = useState(false);
   const [openDoneDialog, setOpenDoneDialog] = useState(false);
   const [openSB, setOpenSB] = useState(false);
 
-  const createRecipe = async () => {
+  const createIngredient = async () => {
     const loggedInUser = localStorage.getItem("user");
     const currentUser = JSON.parse(loggedInUser);
     const accessToken =
       currentUser[0].tokenType + " " + currentUser[0].accessToken;
 
-    const url = endpoint + "create_recipe";
+    const url = endpoint + "create_ingredients";
 
     const data = new FormData();
 
-    data.append("recipe_name", recipeName);
-    data.append("recipe_image", recipeImage);
-    data.append("recipe_ingredients", ingredients);
-    data.append("recipe_instructions", instructions);
-    data.append("recipe_source", source);
-    data.append("recipe_meal", meal);
-
-    console.log("ssdata", mealNumber);
-    console.log("ssdata", meal);
+    data.append("ingredients_name", ingredientName);
+    data.append("recipe_id", recipeSelected);
+    data.append("amount", amount);
+    data.append("measure_name", measure_name);
+    data.append("cups", cups);
+    data.append("comments", comments);
 
     const res = await axios
       .post(url, data, {
@@ -122,7 +162,7 @@ function RecipeForm({ match }) {
         console.log(response);
         setMessage({
           status: "success",
-          statusText: "The recipe is added successfully.",
+          statusText: "The ingredient is added successfully.",
         });
         setOpenSB(true);
         handleCloseConfirmBox();
@@ -132,30 +172,30 @@ function RecipeForm({ match }) {
         console.log(error);
         setMessage({
           status: "error",
-          statusText: "Failed to add the recipe.",
+          statusText: "Failed to add the ingredient.",
         });
         setOpenSB(true);
       });
   };
 
-  const updateRecipe = async () => {
-    const url = endpoint + "update_recipe";
+  const updateIngredient = async () => {
+    const url = endpoint + "update_ingredients";
     const loggedInUser = localStorage.getItem("user");
     const currentUser = JSON.parse(loggedInUser);
     const accessToken =
       currentUser[0].tokenType + " " + currentUser[0].accessToken;
 
-    console.log(accessToken);
+    console.log("id", recipeSelected);
 
     const data = new FormData();
 
-    data.append("recipe_id", id);
-    data.append("recipe_name", recipeName);
-    data.append("recipe_image", recipeImage);
-    data.append("recipe_ingredients", ingredients);
-    data.append("recipe_instructions", instructions);
-    data.append("recipe_source", source);
-    data.append("recipe_meal", meal);
+    data.append("id", id);
+    data.append("ingredients_name", ingredientName);
+    data.append("recipe_id", recipeSelected);
+    data.append("amount", amount);
+    data.append("measure_name", measure_name);
+    data.append("cups", cups);
+    data.append("comments", comments);
 
     const res = await axios
       .post(url, data, {
@@ -169,7 +209,7 @@ function RecipeForm({ match }) {
         console.log(response);
         setMessage({
           status: "success",
-          statusText: "The recipe is updated successfully.",
+          statusText: "The ingredient is updated successfully.",
         });
         setOpenSB(true);
         handleCloseConfirmBox();
@@ -179,7 +219,7 @@ function RecipeForm({ match }) {
         console.log(error);
         setMessage({
           status: "error",
-          statusText: "Failed to update the recipe.",
+          statusText: "Failed to update the ingredient.",
         });
         setOpenSB(true);
       });
@@ -206,25 +246,24 @@ function RecipeForm({ match }) {
 
   useEffect(() => {
     if (isAddMode) {
-      setDialogMessage("Are you sure you want to add this recipe?");
+      setDialogMessage("Are you sure you want to add this ingredient?");
     } else {
-      setDialogMessage("Are you sure you want to update this recipe?");
+      setDialogMessage("Are you sure you want to update this ingredient?");
     }
   }, []);
 
-  const saveRecipe = async () => {
-    // console.log(data);
-
+  const saveIngredient = async () => {
     try {
       if (isAddMode) {
-        await createRecipe();
+        await createIngredient();
       } else {
-        await updateRecipe();
+        await updateIngredient();
       }
     } catch (err) {
       throw err;
     }
   };
+
   return (
     <>
       <div>
@@ -234,8 +273,8 @@ function RecipeForm({ match }) {
             <div className="container-fluid">
               <div className="row mb-2">
                 <div className="col-sm-6">
-                  <h1>Recipe Form</h1>
-                  <p>Create or edit recipe information.</p>
+                  <h1>Ingredient Form</h1>
+                  <p>Create or edit ingredient information.</p>
                 </div>
               </div>
             </div>
@@ -250,7 +289,7 @@ function RecipeForm({ match }) {
                     <Col>
                       <Card>
                         <Card.Header>
-                          <Card.Title as="h4">Recipe Form</Card.Title>
+                          <Card.Title as="h4">Ingredient Form</Card.Title>
                         </Card.Header>
                         <Card.Body>
                           <Form>
@@ -258,70 +297,77 @@ function RecipeForm({ match }) {
                               <Col className="pr-1" md="6">
                                 <InputLabel>Name</InputLabel>
                                 <TextField
-                                  value={recipeName == null ? "" : recipeName}
+                                  value={
+                                    ingredientName == null ? "" : ingredientName
+                                  }
                                   size="small"
-                                  id="recipeName"
+                                  id="ingredientName"
                                   sx={{ marginBottom: "20px" }}
                                   fullWidth
                                   onChange={(e) => {
-                                    setRecipeName(e.target.value);
+                                    setIngredientName(e.target.value);
                                   }}
                                 />
                               </Col>
                               <Col className="pr-1" md="6">
-                                <InputLabel>Image URL</InputLabel>
-                                <TextField
-                                  value={recipeImage == null ? "" : recipeImage}
-                                  size="small"
-                                  id="recipeImage"
-                                  type="url"
-                                  fullWidth
-                                  onChange={(e) => {
-                                    setRecipeImage(e.target.value);
-                                  }}
-                                />
-                              </Col>
-                            </Row>
-                            <Row>
-                              <Col className="pr-1" md="6">
-                                <InputLabel>Source URL</InputLabel>
-                                <TextField
-                                  value={source == null ? "" : source}
-                                  size="small"
-                                  id="source"
-                                  fullWidth
-                                  sx={{ marginBottom: "30px" }}
-                                  onChange={(e) => {
-                                    setSource(e.target.value);
-                                  }}
-                                />
-                              </Col>
-                              <Col className="pr-1" md="6">
-                                <InputLabel>Meal</InputLabel>
+                                <InputLabel>Recipe</InputLabel>
                                 <FormControl fullWidth>
                                   <Select
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
-                                    value={meal}
+                                    value={recipeSelected || ""}
                                     onChange={(e) => {
-                                      setMealNumber(e.target.id);
-                                      setMeal(e.target.value);
+                                      setRecipeSelected(
+                                        e.target.value,);
                                     }}
                                   >
-                                    <MenuItem value="">
-                                      <em>None</em>
+                                    {recipe?.map((rec) => (
+                                      <MenuItem
+                                        value={rec.recipe_id}
+                                      >
+                                        {rec.recipe_name}
+                                      </MenuItem>
+                                    ))}
+                                  </Select>
+                                </FormControl>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col className="pr-1" md="6">
+                                <InputLabel>Amount</InputLabel>
+                                <TextField
+                                  value={amount == null ? "" : amount}
+                                  size="small"
+                                  id="amount"
+                                  fullWidth
+                                  sx={{ marginBottom: "30px" }}
+                                  onChange={(e) => {
+                                    setAmount(e.target.value);
+                                  }}
+                                />
+                              </Col>
+                              <Col className="pr-1" md="6">
+                                <InputLabel>Measure Name</InputLabel>
+                                <FormControl fullWidth>
+                                  <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={measure_name || ""}
+                                    onChange={(e) => {
+                                      setMeasureName(e.target.value);
+                                    }}
+                                  >
+                                    <MenuItem value={"cup"}>cup</MenuItem>
+                                    <MenuItem value={"ounces"}>ounces</MenuItem>
+                                    <MenuItem value={"teaspoons"}>
+                                      teaspoons
                                     </MenuItem>
-                                    <MenuItem id="0" value={0}>
-                                      Breakfast
+                                    <MenuItem value={"tablespoons"}>
+                                      tablespoons
                                     </MenuItem>
-                                    <MenuItem id="1" value={1}>
-                                      Lunch
-                                    </MenuItem>
-                                    <MenuItem id="2" value={2}>
-                                      Snacks
-                                    </MenuItem>
-                                    <MenuItem id="3" value={3}>
-                                      Dinner
+                                    <MenuItem value={"whole"}>whole</MenuItem>
+                                    <MenuItem value="others">
+                                      <em>others</em>
                                     </MenuItem>
                                   </Select>
                                 </FormControl>
@@ -329,53 +375,45 @@ function RecipeForm({ match }) {
                             </Row>
                             <Row>
                               <Col className="pr-1" md="6">
-                                <InputLabel>Ingredients</InputLabel>
+                                <InputLabel>Cups</InputLabel>
                                 <TextField
-                                  value={ingredients == null ? "" : ingredients}
-                                  size="small"
-                                  id="ingredients"
-                                  multiline
-                                  rows={4}
-                                  type="text"
+                                  value={cups == null ? "" : cups}
+                                  type="number"
                                   fullWidth
+                                  size="small"
+                                  id="cups"
                                   sx={{ marginBottom: "20px" }}
                                   onChange={(e) => {
-                                    setIngredients(e.target.value);
+                                    setCups(e.target.value);
                                   }}
                                 />
                               </Col>
                               <Col className="pr-1" md="6">
-                                <InputLabel>Recipe Instructions</InputLabel>
+                                <InputLabel>Ingredient Comments</InputLabel>
                                 <TextField
-                                  value={
-                                    instructions == null ? "" : instructions
-                                  }
-                                  multiline
-                                  rows={4}
+                                  value={comments == null ? null : comments}
                                   type="text"
                                   fullWidth
                                   size="small"
-                                  id="instructions"
+                                  id="comments"
                                   sx={{ marginBottom: "20px" }}
                                   onChange={(e) => {
-                                    setInstructions(e.target.value);
+                                    setComments(e.target.value);
                                   }}
                                 />
                               </Col>
                             </Row>
-
                             <Row>
                               <Button
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
                                 onClick={() => {
                                   if (
-                                    recipeName === "" ||
-                                    recipeImage === "" ||
-                                    ingredients === "" ||
-                                    instructions === "" ||
-                                    source === "" ||
-                                    meal === null
+                                    ingredientName === "" ||
+                                    recipeSelected === null ||
+                                    amount === null ||
+                                    measure_name === "" ||
+                                    cups === null
                                   ) {
                                     setMessage({
                                       status: "error",
@@ -394,7 +432,7 @@ function RecipeForm({ match }) {
                                 {isAddMode ? "Create" : "Edit"}
                               </Button>
                               <div>&nbsp;</div>
-                              <Link stl to="/recipe">
+                              <Link stl to="/ingredients">
                                 <Button
                                   variant="contained"
                                   sx={{ mt: 3, mb: 2 }}
@@ -402,6 +440,7 @@ function RecipeForm({ match }) {
                                   Back
                                 </Button>
                               </Link>
+                              
                             </Row>
                             <div className="clearfix"></div>
                           </Form>
@@ -415,22 +454,6 @@ function RecipeForm({ match }) {
           </section>
         </div>
       </div>
-      {/* <Dialog
-        open={openDoneDialog}
-        onClose={handleCloseDoneDialog}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Confirmation"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            The Recipe is updated successfully!
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDoneDialog()}>No</Button>
-        </DialogActions>
-      </Dialog> */}
       <Dialog
         open={openConfirmBox}
         onClose={handleCloseConfirmBox}
@@ -445,7 +468,7 @@ function RecipeForm({ match }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseConfirmBox}>No</Button>
-          <Button onClick={() => saveRecipe()} autoFocus>
+          <Button onClick={() => saveIngredient()} autoFocus>
             Yes
           </Button>
         </DialogActions>
@@ -468,4 +491,4 @@ function RecipeForm({ match }) {
   );
 }
 
-export default RecipeForm;
+export default IngredientForm;

@@ -12,11 +12,12 @@ import {
   Button,
   Snackbar,
 } from "@mui/material";
+import { Row } from "react-bootstrap";
 
 const endpoint = process.env.REACT_APP_API_ENDPOINT;
 
-const fetchFood = async () => {
-  const url = endpoint + "get_all_food";
+const fetchIng = async () => {
+  const url = endpoint + "get_ingredients";
   const res = await axios
     .get(url, {
       headers: {
@@ -34,29 +35,30 @@ const fetchFood = async () => {
   return res.data;
 };
 
-export default function FoodListing() {
-  const [food, setFood] = useState([]);
+export default function IngListing() {
+  const [ing, setIng] = useState([]);
   const [openConfirmBox, setOpenConfirmBox] = useState(false);
-  const [foodId, setFoodId] = useState([]);
+  const [id, setIngId] = useState([]);
   const [openSB, setOpenSB] = useState(false);
 
   useEffect(() => {
-    const getFood = async () => {
-      const results = await fetchFood();
-      setFood(results);
+    const getIng = async () => {
+      const results = await fetchIng();
+      setIng(results);
     };
 
-    getFood();
+    getIng();
+    // console.log("Ing", Ing);
   }, []);
 
-  const archivedFood = async () => {
-    const url = endpoint + "archived_food/" + parseInt(foodId);
+  const archivedIng = async () => {
+    const url = endpoint + "archived_ingredients/" + parseInt(id);
     const loggedInUser = localStorage.getItem("user");
     const currentUser = JSON.parse(loggedInUser);
     const accessToken =
       currentUser[0].tokenType + " " + currentUser[0].accessToken;
 
-    console.log(accessToken);
+    console.log(url);
 
     const res = await axios
       .post(url, "", {
@@ -67,24 +69,24 @@ export default function FoodListing() {
         },
       })
       .catch((error) => {
-        console.log(error);
+        console.log("???", error);
         setMessage({
           status: "error",
-          statusText: "Failed to archive the food!",
+          statusText: "Failed to archive the ingredients!",
         });
         setOpenSB(true);
       });
 
     if (res.data) {
-      // await fetchFood();
+      // await fetchingredients();
       setMessage({
         status: "success",
-        statusText: "Food is archived successfully!",
+        statusText: "Ingredient is archived successfully!",
       });
     } else {
       setMessage({
         status: "error",
-        statusText: "Failed to archive the food!",
+        statusText: "Failed to archive the ingredient!",
       });
     }
 
@@ -94,7 +96,8 @@ export default function FoodListing() {
   };
 
   const handleOpenConfirmBox = (id) => {
-    setFoodId(id);
+    console.log("open", id);
+    setIngId(id);
     setOpenConfirmBox(true);
   };
   const handleCloseConfirmBox = () => {
@@ -113,73 +116,58 @@ export default function FoodListing() {
     statusText: "",
   });
 
-  
-
   const columns = [
     {
       name: "Name",
-      selector: (row) => row.food_name,
+      selector: (row) => row.ingredients_name,
       sortable: true,
     },
     {
-      name: "Barcode",
-      selector: (row) => row.food_code,
+      name: "Recipe Id",
+      selector: (row) => row.recipe_id,
       sortable: true,
     },
     {
-      name: "Quantity",
-      selector: (row) => row.food_quantity,
+      name: "Amount",
+      selector: (row) => row.amount,
       sortable: true,
     },
     {
-      name: "Serving Size",
-      selector: (row) => row.food_serving_size,
+      name: "Measure Name",
+      selector: (row) => row.measure_name,
       sortable: true,
     },
     {
-      name: "Enery_kcal",
-      selector: (row) => row.energy_kcal_100g,
+      name: "Cups",
+      selector: (row) => row.cups,
       sortable: true,
     },
     {
-      name: "Carbohydrates/100g",
-      selector: (row) => row.carbohydrates_100g,
+      name: "Comments",
+      selector: (row) => row.comments,
       sortable: true,
     },
-    {
-      name: "Proteins/100g",
-      selector: (row) => row.proteins_100g,
-      sortable: true,
-    },
-    {
-      name: "Sodium/100g",
-      selector: (row) => row.sodium_100g,
-      sortable: true,
-    },
-    {
-      name: "Calcium/100g",
-      selector: (row) => row.calcium_100g,
-      sortable: true,
-    },
+
     {
       cell: (row) => (
         <>
-          <Link to={`/food/${row.id}`}>
-                    <button className="btn btn-primary " id={row.id}>
-                        <i className="fas fa-edit" />
-                    </button>
-                </Link>
+          <Link to={`/ingredients/${row.id}/${row.recipe_id}`}>
+            <button className="btn btn-primary " id={row.id}>
+              <i className="fas fa-edit" />
+            </button>
+          </Link>
           {/* <button
             className="btn btn-primary "
             onClick={() => handleOpenConfirmBox(row.id)}
             id={row.id}
           > */}
-            {/* <i className="fas fa-edit" /> */}
+          {/* <i className="fas fa-edit" /> */}
           {/* </button> */}
           <div>&nbsp;</div>
           <button
             className="btn btn-danger "
             onClick={() => {
+              console.log("on click", row.id);
               handleOpenConfirmBox(row.id);
             }}
             id={row.id}
@@ -202,8 +190,8 @@ export default function FoodListing() {
           <div className="container-fluid">
             <div className="row mb-2">
               <div className="col-sm-6">
-                <h1>Food Listing</h1>
-                <p>All food information in the database.</p>
+                <h1>Ingredients Listing</h1>
+                <p>All ingredients in the database.</p>
               </div>
             </div>
           </div>
@@ -216,19 +204,29 @@ export default function FoodListing() {
               <div className="col-12">
                 <div className="card">
                   <div className="card-header">
-                    <Link stl to="/food/add">
+                    <Row>
+                      <Link stl to="/ingredients/add">
+                        <button className="btn btn-success ">
+                          <i className="fas fa-plus" /> Add New
+                        </button>
+                      </Link>
+                      <div>&nbsp;</div>
+                      <Link stl to="/jsonIngredient">
                       <button className="btn btn-success ">
-                        <i className="fas fa-plus" /> Add New
-                      </button>
-                    </Link>
+                          <i className="fas fa-file-code" /> Batch Insert
+                        </button>
+                      </Link>
+                    </Row>
                   </div>
                   {/* /.card-header */}
                   <div className="card-body">
                     <DataTable
                       columns={columns}
-                      data={food}
+                      data={ing}
                       pagination
                       highlightOnHover
+                      size={"normal"}
+                      tableStyle={{ width: "50rem" }}
                     />
                   </div>
                   {/* /.card-body */}
@@ -252,12 +250,12 @@ export default function FoodListing() {
         <DialogTitle id="alert-dialog-title">{"Confirmation"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure to archived this food?
+            Are you sure to archive this ingredients?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseConfirmBox}>No</Button>
-          <Button onClick={() => archivedFood()} autoFocus>
+          <Button onClick={() => archivedIng()} autoFocus>
             Yes
           </Button>
         </DialogActions>

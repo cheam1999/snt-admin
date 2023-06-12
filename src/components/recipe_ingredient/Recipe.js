@@ -30,33 +30,35 @@ const fetchRecipe = async () => {
       console.log(err.response.headers);
       throw err;
     });
-
+  
   return res.data;
 };
 
 export default function RecipeListing() {
   const [recipe, setRecipe] = useState([]);
   const [openConfirmBox, setOpenConfirmBox] = useState(false);
-  const [recipeId, setRecipeId] = useState([]);
+  const [recipe_id, setRecipeId] = useState([]);
   const [openSB, setOpenSB] = useState(false);
 
   useEffect(() => {
     const getRecipe = async () => {
       const results = await fetchRecipe();
       setRecipe(results);
+      
     };
 
     getRecipe();
+    console.log("recipe", recipe);
   }, []);
 
   const archivedRecipe = async () => {
-    const url = endpoint + "archived_recipe/" + parseInt(recipeId);
+    const url = endpoint + "archived_recipe/" + parseInt(recipe_id);
     const loggedInUser = localStorage.getItem("user");
     const currentUser = JSON.parse(loggedInUser);
     const accessToken =
       currentUser[0].tokenType + " " + currentUser[0].accessToken;
 
-    console.log(accessToken);
+    console.log(url);
 
     const res = await axios
       .post(url, "", {
@@ -67,7 +69,7 @@ export default function RecipeListing() {
         },
       })
       .catch((error) => {
-        console.log(error);
+        console.log("???", error);
         setMessage({
           status: "error",
           statusText: "Failed to archive the recipe!",
@@ -79,7 +81,7 @@ export default function RecipeListing() {
       // await fetchrecipe();
       setMessage({
         status: "success",
-        message: "Recipe is archived successfully!",
+        statusText: "Recipe is archived successfully!",
       });
     } else {
       setMessage({
@@ -94,6 +96,7 @@ export default function RecipeListing() {
   };
 
   const handleOpenConfirmBox = (id) => {
+    console.log("open", id);
     setRecipeId(id);
     setOpenConfirmBox(true);
   };
@@ -117,22 +120,27 @@ export default function RecipeListing() {
   const columns = [
     {
       name: "Name",
-      selector: (row) => row.recipeName,
+      selector: (row) => row.recipe_name,
       sortable: true,
     },
     {
       name: "Image URL",
-      selector: (row) => row.recipeImage,
+      selector: (row) => row.recipe_image,
       sortable: true,
     },
     {
       name: "Ingredients",
-      selector: (row) => row.recipeIngredients,
+      selector: (row) => row.recipe_ingredients,
+      sortable: true,
+    },
+    {
+      name: "Instructions",
+      selector: (row) => row.recipe_instructions,
       sortable: true,
     },
     {
       name: "Source",
-      selector: (row) => row.recipeSource,
+      selector: (row) => row.recipe_source,
       sortable: true,
     },
     {
@@ -144,15 +152,17 @@ export default function RecipeListing() {
     {
       cell: (row) => (
         <>
-          <Link to={`/recipe/${row.id}`}>
-            <button className="btn btn-primary " id={row.id}>
+        
+          <Link to={`/recipe/${row.recipe_id}`}>
+            
+            <button className="btn btn-primary " id={row.recipe_id}>
               <i className="fas fa-edit" />
             </button>
           </Link>
           {/* <button
             className="btn btn-primary "
-            onClick={() => handleOpenConfirmBox(row.id)}
-            id={row.id}
+            onClick={() => handleOpenConfirmBox(row.recipe_id)}
+            id={row.recipe_id}
           > */}
           {/* <i className="fas fa-edit" /> */}
           {/* </button> */}
@@ -160,9 +170,10 @@ export default function RecipeListing() {
           <button
             className="btn btn-danger "
             onClick={() => {
-              handleOpenConfirmBox(row.id);
+              console.log("on click",row.recipe_id);
+              handleOpenConfirmBox(row.recipe_id);
             }}
-            id={row.id}
+            id={row.recipe_id}
           >
             <i className="fas fa-times" />
           </button>
@@ -209,6 +220,8 @@ export default function RecipeListing() {
                       data={recipe}
                       pagination
                       highlightOnHover
+                      size={"normal"}
+                      tableStyle={{ width: '50rem' }}
                     />
                   </div>
                   {/* /.card-body */}

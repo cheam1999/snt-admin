@@ -16,6 +16,7 @@
     "html-react-parser": "^1.4.5",
     "html-to-draftjs": "^1.5.0",
     "moment": "^2.29.1",
+    "primereact": "^9.5.0",
     "react": "^17.0.2",
     "react-bootstrap": "^2.7.4",
     "react-data-table-component": "^7.4.5",

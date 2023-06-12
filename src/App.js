@@ -7,6 +7,7 @@ import FoodListing from './components/Food/FoodListing';
 import FoodForm from './components/Food/FoodForm';
 import RecipeListing from './components/recipe_ingredient/Recipe';
 import RecipeForm from './components/recipe_ingredient/RecipeForm';
+import IngredientListing from './components/recipe_ingredient/IngredientListing';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import Home from './components/Home';
@@ -14,7 +15,9 @@ import PageNotFound from './components/PageNotFound';
 import Login from './components/Login';
 import Sidebar from './components/Sidebar';
 import PrivateRoute from './routes/PrivateRoute';
-
+import IngredientForm from './components/recipe_ingredient/IngredientForm';
+import JsonIngredient from './components/recipe_ingredient/JsonIngredient';
+import JsonIngredientForm from './components/recipe_ingredient/JsonIngredientForm';
 
 export default function App() {
 
@@ -61,11 +64,17 @@ export default function App() {
           <Route path="/recipe" element={<RecipeListing />} />
           <Route path="/recipe/:id" element={<RecipeForm />} />
           <Route path="/recipe/add" element={<RecipeForm />} />
+          <Route path="/ingredients" element={<IngredientListing />} />
+          <Route path="/ingredients/add" element={<IngredientForm />} />
+          <Route path="/ingredients/:id/:rec_id" element={<IngredientForm />} />
+          <Route path="/jsonIngredient" element={<JsonIngredient />} />
+          <Route path="/jsonIngredientForm" element={<JsonIngredientForm />} /> 
+
           {/* food */}
           <Route path="/unverifiedFood" element={<UnverifiedFoodListing />} />
           <Route path="/food" element={<FoodListing />} />
           <Route path="/food/add" element={<FoodForm />} />
-          <Route path="/food/:id" element={<FoodForm />} /> 
+          <Route path="/food/:id/:recipe_id" element={<FoodForm />} /> 
         </Route>
         <Route path="*" element={<PageNotFound user={user} />} />
       </Routes>

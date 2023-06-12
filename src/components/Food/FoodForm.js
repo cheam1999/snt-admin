@@ -10,7 +10,7 @@ import {
   convertDateFormat,
   convertToIntIfString,
 } from "../../helpers/helper.js";
-
+import { Link } from "react-router-dom";
 import useImage from "../../hooks/useImage.js";
 
 import * as Yup from "yup";
@@ -90,30 +90,28 @@ const endpoint = process.env.REACT_APP_API_ENDPOINT;
 //     return res.data
 // }
 
+// const updateEvolve = async (id, data) => {
+//   const loggedInUser = localStorage.getItem("user");
+//   const currentUser = JSON.parse(loggedInUser);
+//   const accessToken = currentUser.tokenType + " " + currentUser.accessToken;
 
+//   const url = endpoint + "food/" + parseInt(id);
 
-const updateEvolve = async (id, data) => {
-  const loggedInUser = localStorage.getItem("user");
-  const currentUser = JSON.parse(loggedInUser);
-  const accessToken = currentUser.tokenType + " " + currentUser.accessToken;
-
-  const url = endpoint + "food/" + parseInt(id);
-
-  const res = await axios
-    .put(url, data, {
-      headers: {
-        Accept: "application/json",
-        "Content-type": "application/json",
-        Authorization: accessToken,
-      },
-    })
-    .catch((err) => {
-      console.log(err.response.data);
-      console.log(err.response.status);
-      console.log(err.response.headers);
-      throw err;
-    });
-};
+//   const res = await axios
+//     .put(url, data, {
+//       headers: {
+//         Accept: "application/json",
+//         "Content-type": "application/json",
+//         Authorization: accessToken,
+//       },
+//     })
+//     .catch((err) => {
+//       console.log(err.response.data);
+//       console.log(err.response.status);
+//       console.log(err.response.headers);
+//       throw err;
+//     });
+// };
 
 //API End
 
@@ -175,12 +173,13 @@ function FoodForm({ match }) {
   const createFood = async () => {
     const loggedInUser = localStorage.getItem("user");
     const currentUser = JSON.parse(loggedInUser);
-    const accessToken = currentUser[0].tokenType + " " + currentUser[0].accessToken;
-  
+    const accessToken =
+      currentUser[0].tokenType + " " + currentUser[0].accessToken;
+
     const url = endpoint + "create_food";
 
     console.log(accessToken);
-  
+
     const data = new FormData();
 
     data.append("food_name", foodName);
@@ -298,20 +297,6 @@ function FoodForm({ match }) {
     statusText: "",
   });
 
-  // Yup.addMethod(Yup.string, "isUrlMethod", isUrlMethod);
-  // Yup.addMethod(Yup.string, "validateRichText", validateRichText);
-
-  // const validationSchema = Yup.object().shape({
-  //   food_name: Yup.string().required("Name is required"),
-  //   food_quantity: Yup.string().required("Quantity is required").isUrlMethod(),
-  //   food_serving_size: Yup.string().required("Serving Size is required"),
-  //   energy: Yup.string().validateRichText("Energy in kcal is required"),
-  //   carb: Yup.string().validateRichText("Carbohydrates per 100g is required"),
-  //   proteins: Yup.string().validateRichText("Proteins per 100g is required"),
-  //   sodium: Yup.string().validateRichText("Sodium per 100g is required"),
-  //   calcium: Yup.string().validateRichText("Calcium per 100g is required"),
-  // });
-
   useEffect(() => {
     if (isAddMode) {
       setDialogMessage("Are you sure you want to add this food?");
@@ -334,34 +319,6 @@ function FoodForm({ match }) {
     }
   };
 
-  // const onSubmit = async (data) => {
-  //   MySwal.fire({
-  //     title: "Are you sure?",
-  //     text: "You won't be able to revert this!",
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     // confirmButtonColor: '#3085d6',
-  //     // cancelButtonColor: '#d33',
-  //     confirmButtonText: "Confirm",
-  //   }).then(async (result) => {
-  //     if (result.isConfirmed) {
-  //       try {
-  //         await saveEvolve(data).then(() => {
-  //           Swal.fire("Success!", "You saved the item!", "success");
-  //         });
-  //       } catch (err) {
-  //         MySwal.fire({
-  //           icon: "error",
-  //           title: "Oops...",
-  //           text: "Something went wrong!",
-  //         });
-  //         throw err;
-  //       }
-
-  //       navigate("/food");
-  //     }
-  //   });
-  // };
   return (
     <>
       <div>
@@ -507,37 +464,48 @@ function FoodForm({ match }) {
                                 />
                               </Col>
                             </Row>
-                            <Button
-                              variant="contained"
-                              sx={{ mt: 3, mb: 2 }}
-                              onClick={() => {
-                                if (
-                                  foodName === "" ||
-                                  // foodCode === "" ||
-                                  quantity === null ||
-                                  serving_size === null ||
-                                  energy === null ||
-                                  carb === null ||
-                                  proteins === null ||
-                                  sodium === null
-                                  // calcium === null
-                                ) {
-                                  setMessage({
-                                    status: "error",
-                                    statusText:
-                                      "You are required to fill in all the details.",
-                                  });
-                                  setOpenSB(true);
-                                } else {
-                                  handleOpenConfirmBox();
+                            <Row>
+                              <Button
+                                variant="contained"
+                                sx={{ mt: 3, mb: 2 }}
+                                onClick={() => {
+                                  if (
+                                    foodName === "" ||
+                                    // foodCode === "" ||
+                                    quantity === null ||
+                                    serving_size === null ||
+                                    energy === null ||
+                                    carb === null ||
+                                    proteins === null ||
+                                    sodium === null
+                                    // calcium === null
+                                  ) {
+                                    setMessage({
+                                      status: "error",
+                                      statusText:
+                                        "You are required to fill in all the details.",
+                                    });
+                                    setOpenSB(true);
+                                  } else {
+                                    handleOpenConfirmBox();
+                                  }
+                                }}
+                                disabled={
+                                  message.status === "success" ? true : false
                                 }
-                              }}
-                              disabled={
-                                message.status === "success" ? true : false
-                              }
-                            >
-                              {isAddMode ? "Create" : "Edit"}
-                            </Button>
+                              >
+                                {isAddMode ? "Create" : "Edit"}
+                              </Button>
+                              <div>&nbsp;</div>
+                              <Link stl to="/food">
+                                <Button
+                                  variant="contained"
+                                  sx={{ mt: 3, mb: 2 }}
+                                >
+                                  Back
+                                </Button>
+                              </Link>
+                            </Row>
                             <div className="clearfix"></div>
                           </Form>
                         </Card.Body>

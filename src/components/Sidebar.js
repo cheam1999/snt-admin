@@ -71,8 +71,13 @@ export default function Sidebar({ currentUser }) {
                                         </Link>
                                     </li>
                                     <li className="nav-item">
-                                        <Link className={`nav-link ${splitLocation[1] === "unverifiedFood" ? "active" : ""}`} to='/unverifiedFood'><i className="far fa-circle nav-icon" />
+                                        <Link className={`nav-link ${splitLocation[1] === "ingredients" ? "active" : ""}`} to='/ingredients'><i className="far fa-circle nav-icon" />
                                             <p>Ingredients Listing</p>
+                                        </Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className={`nav-link ${splitLocation[1] === "jsonIngredient" ? "active" : ""}`} to='/jsonIngredient'><i className="far fa-file-code nav-icon" />
+                                            <p>Ingredients Json Form</p>
                                         </Link>
                                     </li>
 
