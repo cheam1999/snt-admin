@@ -122,26 +122,31 @@ export default function RecipeListing() {
       name: "Name",
       selector: (row) => row.recipe_name,
       sortable: true,
+      width: "400px"
     },
     {
       name: "Image URL",
       selector: (row) => row.recipe_image,
       sortable: true,
+      width: "400px"
     },
     {
       name: "Ingredients",
       selector: (row) => row.recipe_ingredients,
       sortable: true,
+      width: "400px"
     },
     {
       name: "Instructions",
       selector: (row) => row.recipe_instructions,
       sortable: true,
+      width: "400px"
     },
     {
       name: "Source",
       selector: (row) => row.recipe_source,
       sortable: true,
+      width: "400px"
     },
     {
       name: "Meal",

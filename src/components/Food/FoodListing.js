@@ -142,22 +142,23 @@ export default function FoodListing() {
       sortable: true,
     },
     {
-      name: "Carbohydrates/100g",
+      name: "Carbohydrates/100g (g)",
       selector: (row) => row.carbohydrates_100g,
       sortable: true,
+      width: "200px"
     },
     {
-      name: "Proteins/100g",
+      name: "Proteins/100g (g)",
       selector: (row) => row.proteins_100g,
       sortable: true,
     },
     {
-      name: "Sodium/100g",
+      name: "Sodium/100g (mg)",
       selector: (row) => row.sodium_100g,
       sortable: true,
     },
     {
-      name: "Calcium/100g",
+      name: "Calcium/100g (mg)",
       selector: (row) => row.calcium_100g,
       sortable: true,
     },

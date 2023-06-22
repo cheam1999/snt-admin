@@ -34,87 +34,6 @@ import {
 
 const endpoint = process.env.REACT_APP_API_ENDPOINT;
 
-//API Start
-
-// const fetchOrganizers = async () => {
-
-//     const loggedInUser = localStorage.getItem("user");
-//     const currentUser = JSON.parse(loggedInUser);
-//     const accessToken = currentUser.tokenType + ' ' + currentUser.accessToken
-
-//     const url = endpoint + 'organizers'
-
-//     const res = await axios.get(
-//         url,
-//         {
-//             headers: {
-//                 'Accept': 'application/json',
-//                 'Content-type': 'application/json',
-//                 'Authorization': accessToken,
-//             },
-//         }
-//     ).catch(err => {
-//         console.log(err.response.data);
-//         console.log(err.response.status);
-//         console.log(err.response.headers);
-//         throw err
-//     })
-
-//     return res.data
-// }
-
-// const fetchTopics = async () => {
-
-//     const loggedInUser = localStorage.getItem("user");
-//     const currentUser = JSON.parse(loggedInUser);
-//     const accessToken = currentUser.tokenType + ' ' + currentUser.accessToken
-
-//     const url = endpoint + 'topics'
-
-//     const res = await axios.get(
-//         url,
-//         {
-//             headers: {
-//                 'Accept': 'application/json',
-//                 'Content-type': 'application/json',
-//                 'Authorization': accessToken,
-//             },
-//         }
-//     ).catch(err => {
-//         console.log(err.response.data);
-//         console.log(err.response.status);
-//         console.log(err.response.headers);
-//         throw err
-//     })
-
-//     return res.data
-// }
-
-// const updateEvolve = async (id, data) => {
-//   const loggedInUser = localStorage.getItem("user");
-//   const currentUser = JSON.parse(loggedInUser);
-//   const accessToken = currentUser.tokenType + " " + currentUser.accessToken;
-
-//   const url = endpoint + "food/" + parseInt(id);
-
-//   const res = await axios
-//     .put(url, data, {
-//       headers: {
-//         Accept: "application/json",
-//         "Content-type": "application/json",
-//         Authorization: accessToken,
-//       },
-//     })
-//     .catch((err) => {
-//       console.log(err.response.data);
-//       console.log(err.response.status);
-//       console.log(err.response.headers);
-//       throw err;
-//     });
-// };
-
-//API End
-
 function FoodForm({ match }) {
   const { id } = useParams();
   const MySwal = withReactContent(Swal);
@@ -126,7 +45,7 @@ function FoodForm({ match }) {
   const getFoodById = async (id) => {
     const url = endpoint + "get_food_by_id/" + parseInt(id);
 
-    console.log(url);
+    console.log("url: ", url);
 
     await axios
       .get(url, {
@@ -389,7 +308,7 @@ function FoodForm({ match }) {
                             </Row>
                             <Row>
                               <Col className="pr-1" md="4">
-                                <InputLabel>Serving Size</InputLabel>
+                                <InputLabel>Serving Size (g/ml)</InputLabel>
                                 <TextField
                                   value={
                                     serving_size == null ? "" : serving_size
@@ -415,7 +334,7 @@ function FoodForm({ match }) {
                                 />
                               </Col>
                               <Col className="pr-1" md="4">
-                                <InputLabel>Carbohydrates</InputLabel>
+                                <InputLabel>Carbohydrates (g)</InputLabel>
                                 <TextField
                                   value={carb == null ? "" : carb}
                                   size="small"
@@ -429,7 +348,7 @@ function FoodForm({ match }) {
                             </Row>
                             <Row>
                               <Col className="pr-1" md="4">
-                                <InputLabel>Proteins</InputLabel>
+                                <InputLabel>Proteins (g)</InputLabel>
                                 <TextField
                                   value={proteins == null ? "" : proteins}
                                   size="small"
@@ -441,7 +360,7 @@ function FoodForm({ match }) {
                                 />
                               </Col>
                               <Col className="pr-1" md="4">
-                                <InputLabel>Sodium</InputLabel>
+                                <InputLabel>Sodium (g) </InputLabel>
                                 <TextField
                                   value={sodium == null ? "" : sodium}
                                   size="small"
@@ -452,7 +371,7 @@ function FoodForm({ match }) {
                                 />
                               </Col>
                               <Col className="pr-1" md="4">
-                                <InputLabel>Calcium</InputLabel>
+                                <InputLabel>Calcium (g)</InputLabel>
                                 <TextField
                                   value={calcium == null ? "" : calcium}
                                   size="small"

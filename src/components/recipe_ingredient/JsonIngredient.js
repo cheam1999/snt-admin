@@ -40,6 +40,13 @@ function JsonIngredient() {
   const [measure_name, setMeasureName] = useState();
   const [cups, setCups] = useState();
   const [comments, setComments] = useState("");
+  const [openConfirmBox, setOpenConfirmBox] = useState(false);
+  const handleOpenConfirmBox = () => {
+    setOpenConfirmBox(true);
+  };
+  const handleCloseConfirmBox = () => {
+    setOpenConfirmBox(false);
+  };
 
   const generateList = async () => {
     const jsonObject = eval("(" + jsonText + ")");
@@ -176,7 +183,7 @@ function JsonIngredient() {
         "comments",
         _editedIng[i]["comments"] === undefined ? "" : _editedIng[i]["comments"]
       );
-      console.log('comments', _editedIng[i]["comments"]);
+      console.log("comments", _editedIng[i]["comments"]);
 
       const res = await axios
         .post(url, data, {
@@ -189,11 +196,6 @@ function JsonIngredient() {
         .then((response) => {
           console.log(response);
           successBool[i] = true;
-          // setMessage({
-          //   status: "success",
-          //   statusText: "The ingredients are added successfully.",
-          // });
-          // setOpenSB(true);
         })
         .catch((error) => {
           console.log(error);
@@ -204,14 +206,14 @@ function JsonIngredient() {
 
       // _editedIng[i] = ing;
     }
-    console.log("bool",successBool);
+    console.log("bool", successBool);
     for (let i = 0; i < successBool.length; i++) {
-
       if (successBool[i] === false) {
         setMessage({
           status: "error",
           statusText: "Failed to add the ingredients.",
         });
+        handleCloseConfirmBox();
         setOpenSB(true);
         break;
       }
@@ -219,6 +221,7 @@ function JsonIngredient() {
         status: "success",
         statusText: "The ingredients are added successfully.",
       });
+      handleCloseConfirmBox();
       setOpenSB(true);
     }
   };
@@ -307,7 +310,7 @@ function JsonIngredient() {
                                 size="small"
                                 id="jsonText"
                                 multiline
-                                rows={25}
+                                rows={15}
                                 label="Paste your json text here."
                                 sx={{ marginBottom: "20px" }}
                                 fullWidth
@@ -422,30 +425,41 @@ function JsonIngredient() {
                                 </Row>
                               </div>
                               <div>&nbsp;</div>
-
-                              <Button
-                                variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
-                                disabled={
-                                  decodeIngredientsList.length === 0
-                                    ? true
-                                    : false
-                                }
-                                onClick={() => {
-                                  if (decodeIngredientsList.length === 0) {
-                                    setMessage({
-                                      status: "error",
-                                      statusText:
-                                        "There is no ingredients to insert.",
-                                    });
-                                    setOpenSB(true);
-                                  } else {
-                                    createAllIngredient();
+                              <Row>
+                                <Button
+                                  variant="contained"
+                                  sx={{ mt: 3, mb: 2 }}
+                                  disabled={
+                                    decodeIngredientsList.length === 0
+                                      ? true
+                                      : false
                                   }
-                                }}
-                              >
-                                Insert All
-                              </Button>
+                                  onClick={() => {
+                                    if (decodeIngredientsList.length === 0) {
+                                      setMessage({
+                                        status: "error",
+                                        statusText:
+                                          "There is no ingredients to insert.",
+                                      });
+                                      setOpenSB(true);
+                                    } else {
+                                      handleOpenConfirmBox();
+                                      createAllIngredient();
+                                    }
+                                  }}
+                                >
+                                  Insert All
+                                </Button>
+                                <div>&nbsp;</div>
+                                <Link stl to="/ingredients">
+                                  <Button
+                                    variant="contained"
+                                    sx={{ mt: 3, mb: 2 }}
+                                  >
+                                    Back
+                                  </Button>
+                                </Link>
+                              </Row>
                             </Col>
                           </Row>
                           <div className="clearfix"></div>
@@ -456,6 +470,25 @@ function JsonIngredient() {
                 </Row>
               </Container>
             </div>
+            <Dialog
+              open={openConfirmBox}
+              onClose={handleCloseConfirmBox}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">{"Inserting"}</DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  {"The data is inserting to the database......"}
+                </DialogContentText>
+              </DialogContent>
+              {/* <DialogActions>
+                <Button onClick={handleCloseConfirmBox}>No</Button>
+                <Button onClick={() => saveIngredient()} autoFocus>
+                  Yes
+                </Button>
+              </DialogActions> */}
+            </Dialog>
           </div>
 
           {/* /.container-fluid */}

@@ -74,7 +74,7 @@ export default function App() {
           <Route path="/unverifiedFood" element={<UnverifiedFoodListing />} />
           <Route path="/food" element={<FoodListing />} />
           <Route path="/food/add" element={<FoodForm />} />
-          <Route path="/food/:id/:recipe_id" element={<FoodForm />} /> 
+          <Route path="/food/:id" element={<FoodForm />} /> 
         </Route>
         <Route path="*" element={<PageNotFound user={user} />} />
       </Routes>

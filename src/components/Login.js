@@ -11,7 +11,7 @@ async function loginUser(credentials) {
         "password": credentials.password
     }
 
-    const url = endpoint + 'login'
+    const url = endpoint + 'nutritionistLogin'
 
     console.log(login.email)
 

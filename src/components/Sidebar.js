@@ -53,7 +53,7 @@ export default function Sidebar({ currentUser }) {
          with font-awesome or any other icon font library */}
                             <li className="nav-item menu-open">
                                 <a href="#" className="nav-link">
-                                    <i className="nav-icon fas fa-circle" />
+                                    <i className="nav-icon fas fa-book" />
                                     <p>
                                         Recipe & Ingredients
                                         <i className="right fas fa-angle-left" />
@@ -61,17 +61,12 @@ export default function Sidebar({ currentUser }) {
                                 </a>
                                 <ul className="nav nav-treeview">
                                     <li className="nav-item">
-                                        {/* <Link className={`nav-link ${splitLocation[1] === "organizers" ? "active" : ""}`} to='/organizers'><i className="far fa-circle nav-icon" />
-                                            <p>Organizers</p>
-                                        </Link> */}
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link className={`nav-link ${splitLocation[1] === "recipe" ? "active" : ""}`} to='/recipe'><i className="far fa-circle nav-icon" />
+                                        <Link className={`nav-link ${splitLocation[1] === "recipe" ? "active" : ""}`} to='/recipe'><i className="far fa-file nav-icon" />
                                             <p>Recipes Listing</p>
                                         </Link>
                                     </li>
                                     <li className="nav-item">
-                                        <Link className={`nav-link ${splitLocation[1] === "ingredients" ? "active" : ""}`} to='/ingredients'><i className="far fa-circle nav-icon" />
+                                        <Link className={`nav-link ${splitLocation[1] === "ingredients" ? "active" : ""}`} to='/ingredients'><i className="fas fa-list nav-icon" />
                                             <p>Ingredients Listing</p>
                                         </Link>
                                     </li>
@@ -86,7 +81,7 @@ export default function Sidebar({ currentUser }) {
 
                             <li className="nav-item menu-open">
                                 <a href="#" className="nav-link">
-                                    <i className="nav-icon fas fa-circle" />
+                                    <i className="nav-icon fas fa-utensils" />
                                     <p>
                                         Food
                                         <i className="right fas fa-angle-left" />
@@ -99,12 +94,12 @@ export default function Sidebar({ currentUser }) {
                                         </Link> */}
                                     </li>
                                     <li className="nav-item">
-                                        <Link className={`nav-link ${splitLocation[1] === "food" ? "active" : ""}`} to='/food'><i className="far fa-circle nav-icon" />
+                                        <Link className={`nav-link ${splitLocation[1] === "food" ? "active" : ""}`} to='/food'><i className="far fa-file nav-icon" />
                                             <p>Food Listing</p>
                                         </Link>
                                     </li>
                                     <li className="nav-item">
-                                        <Link className={`nav-link ${splitLocation[1] === "unverifiedFood" ? "active" : ""}`} to='/unverifiedFood'><i className="far fa-circle nav-icon" />
+                                        <Link className={`nav-link ${splitLocation[1] === "unverifiedFood" ? "active" : ""}`} to='/unverifiedFood'><i className="fas fa-check nav-icon" />
                                             <p>Food Verification</p>
                                         </Link>
                                     </li>
