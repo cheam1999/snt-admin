@@ -73,7 +73,7 @@ export default function Login({ user, saveUser }) {
             <div className="hold-transition login-page">
                 <div className="login-box">
                     <div className="login-logo">
-                        <b>Smart Nutri Track</b> Admin Panel
+                        <b>Smart Nutri Track</b> Nutritionist Panel
                     </div>
                     {/* /.login-logo */}
                     <div className="card">
